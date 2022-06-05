@@ -32,6 +32,7 @@ reportWebVitals();
 //react 빌드 실행 : build 폴더를 배포하고(build) 그 안의 index.html로 사용자가 접근하도록 함(-s)
 // 1. "npx serve -s build" 명령어 실행
 // 2. ctrl + c 로 빌드 종료
+//※단, 배포(빌드)의 경우 배포판 생성시 프로그램임, 수정사항을 반영하려면 다시 빌드해줘야 함
 
 //react의 특징
 // 1. 정적인 SSR(Server Side Rendering : 서버 사이드에서 html로 전달)과 달리
