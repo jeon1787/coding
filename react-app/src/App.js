@@ -52,6 +52,24 @@ function Article(props){
   )
 }
 
+function Create(props){
+  return (
+    <article>
+      <h2>Create</h2>
+      <form onSubmit={event=>{
+        event.preventDefault();
+        const title = event.target.title.value;
+        const body = event.target.body.value;
+        props.onCreate(title, body);//이벤트로 얻어낸 value 값을 props로 태그에 전달해준다.
+      }}>
+        <p><input type="text" name="title" placeholder="title"></input></p>
+        <p><textarea name="body" placeholder="body"></textarea></p>
+        <p><input type="submit" value="Create"></input></p>
+      </form>
+    </article>
+  )
+}
+
 function App() {
 
   //모드에 따라 Article이 달라짐
@@ -64,11 +82,12 @@ function App() {
   //const[state이름, state를변경하는함수이름] = useState('초기state값');
   const [mode, setMode] = useState('WELCOME');
   const [id, setId] = useState(null);
-  const topics = [
+  const [nextId, setNextId] = useState(4);
+  const [topics, setTopics] = useState([
     {id:1, title:'html', body:'html is ...'},
     {id:2, title:'css', body:'css is ...'},
     {id:3, title:'javascript', body:'javascript is ...'}
-  ]
+  ]);
   let content = null;
 
   if(mode === 'WELCOME'){
@@ -82,6 +101,18 @@ function App() {
       }
     }
     content = <Article title={title} body={body}></Article>
+  }else if(mode === 'CREATE'){
+    content = <Create onCreate={(_title,_body)=>{
+      //등록
+      const newTopic = {id:nextId, title:_title, body:_body}
+      const newTopics = [...topics]
+      newTopics.push(newTopic)
+      setTopics(newTopics);
+      //화면이동
+      setMode('READ');
+      setId(nextId);
+      setNextId(nextId+1);
+    }}></Create>
   }
 
   return (
@@ -99,10 +130,10 @@ function App() {
 
       {/* 본문 영역 */}
       {content}
-{/*
-      state 적용전
-      <Article title="Welcome" body="Hello, WEB"></Article>
-*/}
+      <a href="/create" onClick={event=>{
+        event.preventDefault();
+        setMode('CREATE');
+      }}>Create</a>
     </div>
   );
 }
@@ -145,3 +176,14 @@ export default App;
 //    ex. import {useState} from 'react';
 // 4. useState(초기state값)함수는 배열을 리턴하고
 //    배열의 [0]번 인덱스는 state값을 리턴하고 배열의 [1]번 인덱스는 state값을 변경할 수 있다.
+
+//8강)
+//create
+// 1.
+//  PRIMITIVE(원시타입) : const [value, setValue] = useState(1);//숫자
+//                       setValue(2);
+//  Object(객체) :       const [value, setValue] = useState([1]);//배열
+//                       newValue = [...value]//...세개 필수(복사를 의미함)
+//                       newValue.push(2);//복사한 데이터를 변경하고
+//                       setValue(newValue);//복사한 데이터를 set한다.
+//※참고)https://seomal.com/map/1/55
